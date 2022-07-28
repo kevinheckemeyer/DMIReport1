@@ -236,7 +236,8 @@ public class DMIReportWriter {
         //need to add property type to the report instead of structure type
         if(columnCount == DMIConstant.DMIExcelCol.M72_Property_Type.type()){
             String field = rowData.get(31).replace("\"", "");
-            cell.setCellValue(DMIConstant.getLQBPropertyType(field));
+            //cell.setCellValue(DMIConstant.getLQBPropertyType(field));
+            cell.setCellValue("#Manual");
         }
         if(columnCount == DMIConstant.DMIExcelCol.M73_Loan_Purpose.type()){
             String field = rowData.get(32).replace("\"", "");
