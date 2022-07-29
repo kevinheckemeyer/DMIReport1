@@ -17,12 +17,14 @@ public class DMIReportReaderMain {
                 while ((line = br.readLine()) != null) {
                     String[] values = line.split(COMMA_DELIMITER);
                     records.add(Arrays.asList(values));
-                }
+
+                  }
                 dmiExcelBatchExport.writeToExcel(records,basePath);
                 System.out.println("Export completed successfully...");
 
             }
         }catch(Exception ex){
+            System.out.println("Export Failed...");
             System.out.println(ex);
 
         }
