@@ -14,10 +14,10 @@ import org.apache.poi.ss.usermodel.*;
 
 public class DMIReportWriter {
 
-    public void writeToExcel(List<List<String>> records)throws Exception{
+    public void writeToExcel(List<List<String>> records,String basePath)throws Exception{
         String excelFilePath = "src/main/resources/DMI_Upload_template.xlsx";
         String dateTime = LocalDateTime.now().toString();
-        String excelExportFilePath = "/Users/georgepeter/Downloads/DMI_Upload_template"+dateTime+".xlsx";
+        String excelExportFilePath = basePath+"/DMI_Upload_template_"+dateTime+".xlsx";
         try {
             FileInputStream inputStream = new FileInputStream(new File(excelFilePath));
             Workbook workbook = WorkbookFactory.create(inputStream);
@@ -240,7 +240,7 @@ public class DMIReportWriter {
         }
         if(columnCount == DMIConstant.DMIExcelCol.M73_Loan_Purpose.type()){
             String field = rowData.get(32).replace("\"", "");
-            cell.setCellValue(DMIConstant.getLQBLoanPurposeType(field));
+             cell.setCellValue(DMIConstant.getLQBLoanPurposeType(field));
         }
         if(columnCount == DMIConstant.DMIExcelCol.Owner_Type.type()){
             cell.setCellValue(1);
@@ -310,7 +310,8 @@ public class DMIReportWriter {
         }
         //not available in the report
         if(columnCount == DMIConstant.DMIExcelCol.F16_Escrow_Balance.type()){
-            cell.setCellValue("#Manual");
+            String field = rowData.get(37).replace("\"", "");
+            cell.setCellValue(field.trim());
         }
         if(columnCount == DMIConstant.DMIExcelCol.F20_Accrued_Late_Charges.type()){
 
@@ -323,10 +324,12 @@ public class DMIReportWriter {
             cell.setCellValue(field.trim());
         }
         if(columnCount == DMIConstant.DMIExcelCol.F23_Principal_Paid_YTD.type()){
-            cell.setCellValue("#Manual");
+            String field = rowData.get(77).replace("\"", "");
+            cell.setCellValue(field.trim());
         }
         if(columnCount == DMIConstant.DMIExcelCol.F24_Taxes_Paid_YTD.type()){
-            cell.setCellValue("#Manual");
+            String field = rowData.get(78).replace("\"", "");
+            cell.setCellValue(field.trim());
         }
         if(columnCount == DMIConstant.DMIExcelCol.F29_IOE_Paid_YTD.type()){
 
@@ -406,8 +409,8 @@ public class DMIReportWriter {
         }
         //need to add to the report
         if(columnCount == DMIConstant.DMIExcelCol.Z26_Branch_Code.type()){
-            //String field = rowData.get(84).replace("\"", "");
-            //cell.setCellValue(field.trim());
+            String field = rowData.get(84).replace("\"", "");
+            cell.setCellValue(field.trim());
         }
         if(columnCount == DMIConstant.DMIExcelCol.X03_Mers_Min.type()){
             String field = rowData.get(48).replace("\"", "");

@@ -7,7 +7,8 @@ import java.util.List;
 public class DMIReportReaderMain {
     public static final String COMMA_DELIMITER = ",";
      public static void main(String args[]){
-         String reportFilePath = "src/main/resources/report.csv";
+         String basePath = "/Users/georgepeter/Downloads/DMI Reports";
+         String reportFilePath = basePath+"/july29.csv";
         DMIReportWriter dmiExcelBatchExport = new DMIReportWriter();
         try {
             List<List<String>> records = new ArrayList<>();
@@ -17,7 +18,8 @@ public class DMIReportReaderMain {
                     String[] values = line.split(COMMA_DELIMITER);
                     records.add(Arrays.asList(values));
                 }
-                dmiExcelBatchExport.writeToExcel(records);
+                dmiExcelBatchExport.writeToExcel(records,basePath);
+                System.out.println("Export completed successfully...");
 
             }
         }catch(Exception ex){
