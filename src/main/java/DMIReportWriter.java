@@ -14,7 +14,7 @@ import org.apache.poi.ss.usermodel.*;
 
 public class DMIReportWriter {
 
-    public void writeToExcel(List<List<String>> records){
+    public void writeToExcel(List<List<String>> records)throws Exception{
         String excelFilePath = "src/main/resources/DMI_Upload_template.xlsx";
         String dateTime = LocalDateTime.now().toString();
         String excelExportFilePath = "/Users/georgepeter/Downloads/DMI_Upload_template"+dateTime+".xlsx";
@@ -233,11 +233,10 @@ public class DMIReportWriter {
         }
         if(columnCount == DMIConstant.DMIExcelCol.M69_Product_Line_Code.type()){
         }
-        //need to add property type to the report instead of structure type
         if(columnCount == DMIConstant.DMIExcelCol.M72_Property_Type.type()){
-            String field = rowData.get(31).replace("\"", "");
-            //cell.setCellValue(DMIConstant.getLQBPropertyType(field));
-            cell.setCellValue("#Manual");
+            String field = rowData.get(70).replace("\"", "");
+            cell.setCellValue(DMIConstant.getLQBPropertyType(field));
+
         }
         if(columnCount == DMIConstant.DMIExcelCol.M73_Loan_Purpose.type()){
             String field = rowData.get(32).replace("\"", "");
@@ -373,8 +372,12 @@ public class DMIReportWriter {
             cell.setCellValue(12);
         }
         if(columnCount == DMIConstant.DMIExcelCol.E34_02_TYPE_PAY.type()){
-            //to-do if property type is condo its 7 else 6
-            cell.setCellValue(6);
+            String field = rowData.get(70).replace("\"", "");
+            if(DMIConstant.getLQBPropertyType(field) == 3){
+                cell.setCellValue(7);
+            }else {
+                 cell.setCellValue(6);
+            }
         }
         if(columnCount == DMIConstant.DMIExcelCol.E34_03_COVERAGE_TYPE.type()){
             cell.setCellValue("H");
@@ -403,7 +406,8 @@ public class DMIReportWriter {
         }
         //need to add to the report
         if(columnCount == DMIConstant.DMIExcelCol.Z26_Branch_Code.type()){
-            cell.setCellValue("#Manual");
+            //String field = rowData.get(84).replace("\"", "");
+            //cell.setCellValue(field.trim());
         }
         if(columnCount == DMIConstant.DMIExcelCol.X03_Mers_Min.type()){
             String field = rowData.get(48).replace("\"", "");
@@ -501,17 +505,37 @@ public class DMIReportWriter {
             cell.setCellValue(field);
         }
     }
-    private void writeRow(Workbook workbook,  Row row,List<String> rowData){
+    private void writeRow(Workbook workbook,  Row row,List<String> rowData)throws Exception{
         CellStyle textStyle = workbook.createCellStyle();
         textStyle.setDataFormat(HSSFDataFormat.getBuiltinFormat("text"));
         Cell cell = null;
         for (int columnCount=0;columnCount<230;columnCount++) {
             cell = row.createCell(columnCount);
-            mSeriesColumns(columnCount,cell,rowData,textStyle);
-            fSeriesColumns(columnCount,cell,rowData);
-            zSeriesColumns(columnCount,cell,rowData);
-            noSeriesColumns(columnCount,cell,rowData);
-            eSeriesColumns(columnCount,cell,rowData);
+            try {
+                mSeriesColumns(columnCount, cell, rowData, textStyle);
+            }catch(Exception ex){
+                throw new Exception("m series issue "+DMIUtils.getExceptionMessage(ex));
+            }
+            try {
+                fSeriesColumns(columnCount,cell,rowData);
+            }catch(Exception ex){
+                throw new Exception("f series issue "+DMIUtils.getExceptionMessage(ex));
+            }
+            try {
+                zSeriesColumns(columnCount,cell,rowData);
+            }catch(Exception ex){
+                throw new Exception("z series issues "+ DMIUtils.getExceptionMessage(ex));
+            }
+            try {
+                noSeriesColumns(columnCount,cell,rowData);
+            }catch(Exception ex){
+                throw new Exception("no series issues "+DMIUtils.getExceptionMessage(ex));
+            }
+            try {
+                eSeriesColumns(columnCount,cell,rowData);
+            }catch(Exception ex){
+             throw new Exception("e series issues "+DMIUtils.getExceptionMessage(ex));
+            }
 
         }
     }
